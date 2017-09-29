@@ -6,3 +6,9 @@
 
 A. Thread is created by a user.
 B. A reply belongs to a thread, and belongs to a user.
+
+## installation
+
+> composer install
+
+> yarn
