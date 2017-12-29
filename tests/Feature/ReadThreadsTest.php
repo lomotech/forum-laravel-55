@@ -2,33 +2,53 @@
 
 namespace Tests\Feature;
 
-use Faker\Factory;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class ThreadsTest extends TestCase
+/**
+ * @property mixed thread
+ */
+class ReadThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /**
-     * @test
-     */
-    public function a_user_can_view_all_threads()
-    {
-        $thread = Factory('App\Thread')->create();
+    protected $thread;
 
-        $response = $this->get('/threads');
-        $response->assertSee($thread->title);
+    /** setUp */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->thread = Factory('App\Thread')->create();
     }
 
-    /**
-     * @test
-     */
+    /** @test */
+    public function a_user_can_view_all_threads()
+    {
+        $this->get('/threads')
+            ->assertSee($this->thread->title);
+    }
+
+    /** @test */
+    public function a_user_can_read_a_single_thread()
+    {
+        $this->get($this->thread->path())
+            ->assertSee($this->thread->title);
+    }
+
+    /** @test */
     public function a_user_can_show_single_thread()
     {
-        $thread = Factory('App\Thread')->create();
+        $this->get($this->thread->path())
+            ->assertSee($this->thread->title);
+    }
 
-        $response = $this->get('/threads/' . $thread->id);
-        $response->assertSee($thread->title);
+    /** @test */
+    public function a_user_can_read_replies_that_are_associated_with_a_thread()
+    {
+        $reply = Factory('App\Reply')->create(['thread_id' => $this->thread->id]);
+
+        $this->get($this->thread->path())
+            ->assertSee($reply->body);
     }
 }
