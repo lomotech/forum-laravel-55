@@ -29,7 +29,7 @@ class ParticipateInThreadsTest extends TestCase
         $thread = factory('App\Thread')->create();
         $reply = factory('App\Reply')->create();
 
-        $this->post($thread->path() . '/replies', $reply->toArray());
+        $this->post(route('threads.replies.store', $thread->id), $reply->toArray());
 
         $this->get($thread->path())
             ->assertSee($reply->body);
