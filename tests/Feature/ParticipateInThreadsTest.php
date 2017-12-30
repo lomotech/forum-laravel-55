@@ -10,7 +10,7 @@ class ParticipateInThreadsTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function an_unauthenticated_user_may_not_add_replies()
+    function a_guest_user_may_not_add_replies()
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
