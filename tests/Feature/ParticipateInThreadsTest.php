@@ -12,13 +12,13 @@ class ParticipateInThreadsTest extends TestCase
     /** @test */
     function a_guest_user_may_not_add_replies()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-
         // given we have an unauthenticated user
         // and an existing thread
         // when the user adds a reply to the thread
         // we expect an exception
-        $this->post('threads/1/replies', []);
+        $this->withExceptionHandling()
+            ->post('threads/1/replies', [])
+            ->assertRedirect(route('login'));
     }
 
     /** @test */

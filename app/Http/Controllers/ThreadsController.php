@@ -10,7 +10,7 @@ class ThreadsController extends controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     /**
@@ -28,12 +28,17 @@ class ThreadsController extends controller
     /**
      * display the specific thread.
      *
-     * @param thread $thread
+     * @param Thread $thread
      * @return \illuminate\contracts\view\factory|\illuminate\view\view
      */
     public function show(Thread $thread)
     {
         return view('threads.show', compact('thread'));
+    }
+
+    public function create()
+    {
+        return view('threads.create');
     }
 
     /**

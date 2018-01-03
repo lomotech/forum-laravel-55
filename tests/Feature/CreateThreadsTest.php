@@ -10,12 +10,24 @@ class CreateThreadsTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function a_guest_may_not_create_threads()
+    function a_guest_may_not_see_create_threads_page()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
+        // we have a guest that want to create thread
+        // but will redirect to login page
+        $this->withExceptionHandling()
+            ->get(route('threads.create'))
+            ->assertRedirect(route('login'));
+    }
 
+    /** @test */
+    function a_guest_may_not_store_threads()
+    {
+        // we have a guest that want to store new thread
+        // but will redirect to login page
         $thread = make('App\Thread');
-        $this->post(route('threads.store'), $thread->toArray());
+        $this->withExceptionHandling()
+            ->post(route('threads.store'), $thread->toArray())
+            ->assertRedirect(route('login'));
     }
 
     /** @test */
