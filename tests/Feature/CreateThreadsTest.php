@@ -12,21 +12,16 @@ class CreateThreadsTest extends TestCase
     /** @test */
     function a_guest_may_not_see_create_threads_page()
     {
-        // we have a guest that want to create thread
-        // but will redirect to login page
-        $this->withExceptionHandling()
-            ->get(route('threads.create'))
-            ->assertRedirect(route('login'));
-    }
+        $this->withExceptionHandling();
 
-    /** @test */
-    function a_guest_may_not_store_threads()
-    {
         // we have a guest that want to store new thread
         // but will redirect to login page
-        $thread = make('App\Thread');
-        $this->withExceptionHandling()
-            ->post(route('threads.store'), $thread->toArray())
+        $this->post(route('threads.store'))
+            ->assertRedirect(route('login'));
+
+        // we have a guest that want to create thread
+        // but will redirect to login page
+        $this->get(route('threads.create'))
             ->assertRedirect(route('login'));
     }
 
@@ -37,13 +32,15 @@ class CreateThreadsTest extends TestCase
         $this->signIn();
 
         // when we hit the endpoint to create a new thread
-        $thread = make('App\Thread');
+        $thread = create('App\Thread');
 
-        $this->post(route('threads.store'), $thread->toArray());
+        $this->post('/threads', $thread->toArray());
+//        $this->post(route('threads.store'), $thread->toArray());
 
         // then, when we visit the thread page
         // we should see the new thread
-        $this->get($thread->path())
+//        dd('/threads/'.$thread->channel->slug.'/'. $thread->id);
+        $this->get('/threads/'.$thread->channel->slug.'/'. $thread->id)
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }

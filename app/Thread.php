@@ -20,7 +20,7 @@ class Thread extends Model
      */
     public function path()
     {
-        return '/threads/' . $this->id;
+        return "/threads/{$this->channel->slug}/{$this->id}";
     }
 
     /**
@@ -34,6 +34,11 @@ class Thread extends Model
     }
 
     // relationship
+
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
 
     /**
      * A thread belongs to a creator.
