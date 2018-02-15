@@ -17,7 +17,7 @@ class ParticipateInThreadsTest extends TestCase
         // when the user adds a reply to the thread
         // we expect an exception
         $this->withExceptionHandling()
-            ->post('threads/1/replies', [])
+            ->post('threads/some-channel/1/replies', [])
             ->assertRedirect(route('login'));
     }
 
@@ -26,10 +26,10 @@ class ParticipateInThreadsTest extends TestCase
     {
         $this->be($user = factory('App\User')->create());
 
-        $thread = factory('App\Thread')->create();
-        $reply = factory('App\Reply')->create();
+        $thread = create('App\Thread');
+        $reply = create('App\Reply');
 
-        $this->post(route('threads.replies.store', $thread->id), $reply->toArray());
+        $this->post($thread->path().'/replies', $reply->toArray());
 
         $this->get($thread->path())
             ->assertSee($reply->body);
